@@ -7,7 +7,7 @@ import {plainToClass} from 'class-transformer';
 
 @Injectable()
 export class TaskItemService {
-  private taskItemURL = environment.appURL + '/task/?page=1&per_page=20&completed=true';
+  private taskItemURL = environment.appURL + '/task';
   private headers = new Headers({'Content-Type': 'application/json'});
 
   constructor(private http: Http) {}

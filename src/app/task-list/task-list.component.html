@@ -1,4 +1,6 @@
 <div class="container">
+  <h1> {{ tasks?.length }} Tasks</h1>
+  <p class="lead">get things done!</p>
   <div class="row" *ngFor="let task of tasks">
     <div class = "col-md-1">
         <div [ngClass]="{'fa': true, 'fa-square-o': !task.completed, 'fa-check-square-o': task.completed}" ng-click="item.toggle_completed()"></div>
@@ -12,15 +14,15 @@
     </div>
     <div class = "col-md-3">
         <div class = "pull-right">
-            <span style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag.luminance()"
-                  class = "label label-default" *ngFor="let tag of task.tags">
+            <a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag.luminance()"
+                  class = "badge badge-default" *ngFor="let tag of task.tags">
                 {{ tag.name }}
-            </span>
+            </a>
         </div>
     </div>
     <div class = "col-md-1">
         <div class = "btn-group btn-group-xs pull-right">
-            <a class = "btn btn-default"><div class = "fa fa-trash"></div></a>
+            <button type="button" class = "btn btn-outline-danger btn-sm"><div class = "fa fa-trash"></div></button>
         </div>
     </div>
   </div>

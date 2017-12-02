@@ -1,0 +1,8 @@
+<div class = "container">
+  <h1>{{ task?.title }}</h1>
+  <a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag?.luminance()"
+      class = "badge badge-default" *ngFor="let tag of task?.tags">
+    {{ tag.name }}
+  </a>
+
+</div>

@@ -6,10 +6,11 @@ import {HttpModule} from '@angular/http';
 import { NavComponent } from './nav/nav.component';
 import { FooterComponent } from './footer/footer.component';
 import { TaskListComponent } from './task-list/task-list.component';
-import {AppRoutingModule} from "./app-routing/app-routing.module";
-import {TaskItemService} from "./task-item.service";
+import {AppRoutingModule} from './app-routing/app-routing.module';
+import {TaskItemService} from './task-item.service';
 import { TruncatePipe } from './truncate.pipe';
 import {TagService} from './tag.service';
+import { TaskDetailsComponent } from './task-details/task-details.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {TagService} from './tag.service';
     FooterComponent,
     TaskListComponent,
     TruncatePipe,
+    TaskDetailsComponent,
   ],
   imports: [
     BrowserModule,
