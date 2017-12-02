@@ -22,9 +22,12 @@
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
+    "@types/lodash": "^4.14.86",
     "bootstrap": "^4.0.0-beta.2",
+    "class-transformer": "^0.1.8",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
+    "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
   },

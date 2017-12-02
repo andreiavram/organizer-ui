@@ -1,6 +1,27 @@
-<ul>
-<li *ngFor="let task of tasks">
-  <span class="badge">{{ task.id }}</span>
-  <span>{{task.title}}</span>
-</li>
-</ul>
+<div class="container">
+  <div class="row" *ngFor="let task of tasks">
+    <div class = "col-md-1">
+        <div [ngClass]="{'fa': true, 'fa-square-o': !task.completed, 'fa-check-square-o': task.completed}" ng-click="item.toggle_completed()"></div>
+        <i [ngClass]="['fa', task.priority_icon()]"></i>
+    </div>
+    <div class = "col-md-7">
+        <span [ngClass]="{'strikethrough': task.completed}">{{ task.title }}</span>
+      &nbsp; <span *ngIf="task.project" [ngClass]="{'label': true, 'label-success': true}">Project</span>
+        <div class = "task-list-description" ng-show="item.task.description.length > 0"><small>{{ task.description | truncate:200 }}</small></div>
+        <div class = "task-list-description"><small>{{ task.changed_date | date }}</small></div>
+    </div>
+    <div class = "col-md-3">
+        <div class = "pull-right">
+            <span style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag.luminance()"
+                  class = "label label-default" *ngFor="let tag of task.tags">
+                {{ tag.name }}
+            </span>
+        </div>
+    </div>
+    <div class = "col-md-1">
+        <div class = "btn-group btn-group-xs pull-right">
+            <a class = "btn btn-default"><div class = "fa fa-trash"></div></a>
+        </div>
+    </div>
+  </div>
+</div>

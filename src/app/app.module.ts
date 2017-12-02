@@ -8,20 +8,23 @@ import { FooterComponent } from './footer/footer.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import {AppRoutingModule} from "./app-routing/app-routing.module";
 import {TaskItemService} from "./task-item.service";
+import { TruncatePipe } from './truncate.pipe';
+import {TagService} from './tag.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     FooterComponent,
-    TaskListComponent
+    TaskListComponent,
+    TruncatePipe,
   ],
   imports: [
     BrowserModule,
     HttpModule,
     AppRoutingModule
   ],
-  providers: [TaskItemService],
-  bootstrap: [AppComponent]
+  providers: [TaskItemService, TagService],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
