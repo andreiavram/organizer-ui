@@ -4,6 +4,7 @@ import {Tag} from './tag';
 import {plainToClass} from 'class-transformer';
 import 'rxjs/add/operator/toPromise';
 import {environment} from '../environments/environment';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class TagService {
@@ -29,6 +30,11 @@ export class TagService {
       .toPromise()
       .then(response => plainToClass(Tag, response.json() as Tag))
       .catch(this.handleError);
+  }
+
+  searchTagObservable(q: string): Observable<Tag[]> {
+    return this.http.get(`${this.tagURL}/?slug=${q}`)
+      .map((response) => plainToClass(Tag, response.json() as Tag[]));
   }
 
 

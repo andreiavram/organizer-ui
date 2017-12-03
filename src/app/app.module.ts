@@ -8,9 +8,13 @@ import { FooterComponent } from './footer/footer.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {TaskItemService} from './task-item.service';
-import { TruncatePipe } from './truncate.pipe';
+import {TruncatePipe} from './truncate.pipe';
 import {TagService} from './tag.service';
-import { TaskDetailsComponent } from './task-details/task-details.component';
+import {TaskDetailsComponent} from './task-details/task-details.component';
+import {FormsModule} from '@angular/forms';
+import {Autosize} from 'ng-autosize';
+import {TagInputModule} from 'ngx-chips';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,11 +24,15 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
     TaskListComponent,
     TruncatePipe,
     TaskDetailsComponent,
+    Autosize
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    AppRoutingModule
+    FormsModule,
+    AppRoutingModule,
+    TagInputModule,
+    BrowserAnimationsModule
   ],
   providers: [TaskItemService, TagService],
   bootstrap: [AppComponent],

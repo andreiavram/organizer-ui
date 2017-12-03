@@ -1,0 +1,14 @@
+.detail-toolbar {
+  margin-top: 20px;
+}
+
+input.no-border, input.no-border:focus,
+textarea.no-border, textarea.no-border:focus {
+    border: none !important;
+    border-color: transparent !important;
+    outline: none;
+}
+
+.full-width {
+    width: 100%;
+}

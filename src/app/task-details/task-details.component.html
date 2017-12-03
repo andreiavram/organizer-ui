@@ -1,8 +1,40 @@
 <div class = "container">
-  <h1>{{ task?.title }}</h1>
-  <a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag?.luminance()"
-      class = "badge badge-default" *ngFor="let tag of task?.tags">
-    {{ tag.name }}
-  </a>
+  <h1><input (keyup)="taskChanged.next($event)" class = "no-border full-width" [(ngModel)]="task.title"></h1>
+  <!--<a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag?.luminance()"-->
+     <!--class = "badge badge-default" *ngFor="let tag of task?.tags">-->
+    <!--{{ tag.name }}-->
+  <!--</a>-->
+  <div>
+    <tag-input [identifyBy]="'id'" [displayBy]="'name'" [(ngModel)]="task.tags" #input theme='minimal'
+               [onlyFromAutocomplete]="true" [onAdding]="processTag" (onAdd)="taskChanged.next($event)"
+               (onRemove)="taskChanged.next($event)">
+      <ng-template let-item="item" let-index="index">
+          <span class = "badge" [style.background-color]="item.color" [style.color]="get_luminance(item)">
+            {{ item.name }}
+          </span>
+        <delete-icon (click)="input.removeItem(item, index)"></delete-icon>
+      </ng-template>
+       <tag-input-dropdown [displayBy]="'name'" [identifyBy]="'id'" [autocompleteObservable]='requestAutocompleteTagItems.bind(this)'>
+       </tag-input-dropdown>
+    </tag-input>
+  </div>
+  <div class = "btn-toolbar mb-3 detail-toolbar" role="toolbar">
+    <div class = "btn-group btn-group-sm mr-2" role="group">
+      <button type="button" class="btn btn-primary"><i class = "fa fa-square-o"></i> Done</button>
+      <button type="button" class="btn btn-secondary"><i class = "fa fa-square-o"></i> Today</button>
+      <button type="button" class="btn btn-secondary"><i class = "fa fa-square-o"></i> Tomorrow</button>
+      <button type="button" class="btn btn-secondary"><i class = "fa fa-square-o"></i> This week</button>
+    </div>
+    <div class = "btn-group btn-group-sm mr-2" role="group">
+      <button type="button" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+    </div>
+    <div class = "btn-group btn-group-sm mr-2" role="group">
+      <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+    </div>
+  </div>
+
+  <div>
+    <textarea (keyup)="taskChanged.next($event)" autosize [minHeight]="60" class="full-width no-border" [(ngModel)]="task.description" placeholder="description"></textarea>
+  </div>
 
 </div>
