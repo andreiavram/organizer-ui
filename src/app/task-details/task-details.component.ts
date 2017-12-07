@@ -73,11 +73,4 @@ export class TaskDetailsComponent implements OnInit {
       .map(t => plainToClass(Tag, t as Tag));
   }
 
-  public get_luminance(tag) {
-    if (typeof tag.luminance === 'function') {
-      return tag.luminance();
-    }
-    return '#FFFFFF';
-  }
-
 }

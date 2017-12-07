@@ -7,14 +7,14 @@
         <i [ngClass]="['fa', task.priority_icon()]"></i>
     </div>
     <div class = "col-md-7">
-        <span [ngClass]="{'strikethrough': task.completed}">{{ task.title }}</span>
+        <span [ngClass]="{'strikethrough': task.completed}">{{ task.id }} {{ task.title }}</span>
       &nbsp; <span *ngIf="task.project" [ngClass]="{'label': true, 'label-success': true}">Project</span>
         <div class = "task-list-description" ng-show="item.task.description.length > 0"><small>{{ task.description | truncate:200 }}</small></div>
         <div class = "task-list-description"><small>{{ task.changed_date | date }}</small></div>
     </div>
     <div class = "col-md-3">
         <div class = "pull-right">
-            <a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag.luminance()"
+            <a href="" style="margin-right: 5px;" [style.background-color]="tag.color" [style.color]="tag.color | luminance"
                   class = "badge badge-default" *ngFor="let tag of task.tags">
                 {{ tag.name }}
             </a>

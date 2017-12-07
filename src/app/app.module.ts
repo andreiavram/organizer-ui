@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {HttpModule} from '@angular/http';
+import {HttpClientModule} from '@angular/common/http';
 import { NavComponent } from './nav/nav.component';
 import { FooterComponent } from './footer/footer.component';
 import { TaskListComponent } from './task-list/task-list.component';
@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms';
 import {Autosize} from 'ng-autosize';
 import {TagInputModule} from 'ngx-chips';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { LuminancePipe } from './luminance.pipe';
 
 @NgModule({
   declarations: [
@@ -24,11 +25,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     TaskListComponent,
     TruncatePipe,
     TaskDetailsComponent,
-    Autosize
+    Autosize,
+    LuminancePipe
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     AppRoutingModule,
     TagInputModule,

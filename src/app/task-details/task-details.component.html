@@ -9,7 +9,7 @@
                [onlyFromAutocomplete]="true" [onAdding]="processTag" (onAdd)="taskChanged.next($event)"
                (onRemove)="taskChanged.next($event)">
       <ng-template let-item="item" let-index="index">
-          <span class = "badge" [style.background-color]="item.color" [style.color]="get_luminance(item)">
+          <span class = "badge" [style.background-color]="item.color" [style.color]="item?.color | luminance">
             {{ item.name }}
           </span>
         <delete-icon (click)="input.removeItem(item, index)"></delete-icon>
