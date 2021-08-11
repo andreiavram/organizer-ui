@@ -1,0 +1,14 @@
+<h1> Tasks <small class="text-muted">get things done</small></h1>
+
+<ul class = "list-group">
+  <li *ngFor="let task of tasks" class = "list-group-item">
+    <div class = "row">
+      <div class = "col-1">
+        <i class="bi bi-star-fill"></i>
+      </div>
+      <div class = "col">
+        {{ task.title }}
+      </div>
+    </div>
+  </li>
+</ul>
