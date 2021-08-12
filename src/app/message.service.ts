@@ -14,4 +14,8 @@ export class MessageService {
   clear() {
     this.messages = [];
   }
+
+  drop (index: number): void {
+    this.messages.splice(index, 1);
+  }
 }

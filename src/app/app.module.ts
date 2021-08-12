@@ -8,12 +8,16 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { MessagesComponent } from './messages/messages.component';
+import { TaskDetailComponent } from './task-detail/task-detail.component';
+import {FormsModule} from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     TasksComponent,
-    MessagesComponent
+    MessagesComponent,
+    TaskDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +29,8 @@ import { MessagesComponent } from './messages/messages.component';
       registrationStrategy: 'registerWhenStable:30000'
     }),
     HttpClientModule,
+    FormsModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,5 @@
+import {Tag} from './tag';
+
 export interface Task {
   id: number;
   title: string;
@@ -14,6 +16,6 @@ export interface Task {
   completed: boolean;
   priority: number;
   owner: number; // todo: Update to User
-  // tags: list
+  tags?: Tag[];
   project: number // todo: Update to Project
 }

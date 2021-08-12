@@ -1,13 +1,21 @@
 <h1> Tasks <small class="text-muted">get things done</small></h1>
 
 <ul class = "list-group">
-  <li *ngFor="let task of tasks" class = "list-group-item">
+  <li *ngFor="let task of tasks" class = "list-group-item" (click)="onSelect(task)">
     <div class = "row">
       <div class = "col-1">
-        <i class="bi bi-star-fill"></i>
+          <a href="#" class="text-black">
+            <svg class="bi me-2" width="24" height="24" role="img" aria-label="Checkbox">
+              <use xlink:href="bootstrap-icons/bootstrap-icons.svg#check-square"></use>
+            </svg>
+          </a>
+
       </div>
       <div class = "col">
-        {{ task.title }}
+        <a routerLink="/tasks/{{ task.id }}">{{ task.title }}</a>
+      </div>
+      <div class = "col">
+        <span *ngFor="let tag of task.tags" class="badge">{{ tag.name }}</span>
       </div>
     </div>
   </li>
