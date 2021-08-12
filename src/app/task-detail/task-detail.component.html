@@ -1,0 +1,11 @@
+<div class = "container">
+  <div *ngIf="task">
+    <h1 class="display-1">{{ task.title }}</h1>
+    <p>{{ task.description }}</p>
+
+    <div>
+      <label for = "task-title">Task title:</label>
+      <input id="task-title" [(ngModel)]="task.title" placeholder="title">
+    </div>
+  </div>
+</div>
