@@ -3,7 +3,7 @@ import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
 import { Task } from './task';
 import { MessageService } from './message.service';
 import {Observable, of} from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {TagService} from './tag.service';
 import {Tag} from './tag';
 
@@ -13,24 +13,40 @@ import {Tag} from './tag';
 export class TaskService {
   private tasksURL = 'http://127.0.0.1:8000/api/task/'
 
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  }
+
   constructor(
     private http: HttpClient,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private tagService: TagService) {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.tasksURL)
+     return this.http.get<Task[]>(this.tasksURL)
       .pipe(
+        tap((tasks: Task[]) => tasks.map((task: Task) => {
+          if (task.tags?.length) {
+            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
+              console.log(tags);
+              task._tags = tags
+            });
+          }
+          return task;
+        })),
         tap(_ => this.log(`fetched ${_.length} tasks`)),
-        map(function(tasks: Task[]) {
-          return tasks.map(function (task: Task) {
-            task.tags = task.tags?.map(tag => tag as Tag);
-            task.tags = task.tags as Tag[];
-            return task;
-          });
-        }),
-        catchError(this.handleError<Task[]>('getTasks', []))
-      );
+        catchError(this.handleError<Task[]>('getTasks', [])),
+      )
+  }
+
+  getTagsForTask(task: Task) {
+    if (!task.tags) {
+      task.tags = [];
+    }
+
+    return this.tagService.getTagsByID(task.tags);
+
   }
 
   getTask(id: number): Observable<Task> {
@@ -39,6 +55,32 @@ export class TaskService {
       .pipe(
         tap(_ => this.log(`fetched task ${id}`)),
         catchError(this.handleError<Task>('getTask'))
+      );
+  }
+
+  addTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(this.tasksURL, task, this.httpOptions)
+      .pipe(
+        tap((newTask: Task) => this.log(`added task id=${newTask.id}`)),
+        catchError(this.handleError<Task>('save task'))
+      );
+  }
+
+  deleteTask(id: number): Observable<Task> {
+    const url = `${this.tasksURL}/${id}`;
+    return this.http.delete<Task>(url, this.httpOptions)
+      .pipe(
+        tap(_ => this.log(`deleted task with ID ${id}`)),
+        catchError(this.handleError<Task>('deleted task'))
+      );
+  }
+
+  updateTask(task: Task): Observable<Task> {
+    const url = `${this.tasksURL}/${task.id}`;
+    return this.http.put<Task>(url, task, this.httpOptions)
+      .pipe(
+        tap((updatedTask: Task) => this.log(`updated task id=${updatedTask.id}`)),
+        catchError(this.handleError<Task>('update task'))
       );
   }
 

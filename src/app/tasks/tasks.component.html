@@ -1,5 +1,11 @@
 <h1> Tasks <small class="text-muted">get things done</small></h1>
 
+<div class = "row">
+  <div class = "col-10">
+    <input id="task-title" [(ngModel)]="task_input" (keyup.enter)="addTask(task_input)">
+  </div>
+</div>
+
 <ul class = "list-group">
   <li *ngFor="let task of tasks" class = "list-group-item" (click)="onSelect(task)">
     <div class = "row">
@@ -15,7 +21,7 @@
         <a routerLink="/tasks/{{ task.id }}">{{ task.title }}</a>
       </div>
       <div class = "col">
-        <span *ngFor="let tag of task.tags" class="badge">{{ tag.name }}</span>
+        <span *ngFor="let tag of task._tags" style="background-color: {{ tag.color }}; color: {{ getTagTextColor(tag.color) }}" class="badge m-1 tag">{{ tag.name }}</span>
       </div>
     </div>
   </li>
