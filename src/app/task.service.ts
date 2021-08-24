@@ -29,7 +29,6 @@ export class TaskService {
         tap((tasks: Task[]) => tasks.map((task: Task) => {
           if (task.tags?.length) {
             this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
-              console.log(tags);
               task._tags = tags
             });
           }
@@ -62,12 +61,19 @@ export class TaskService {
     return this.http.post<Task>(this.tasksURL, task, this.httpOptions)
       .pipe(
         tap((newTask: Task) => this.log(`added task id=${newTask.id}`)),
+        tap((task: Task) => {
+          if (task.tags.length) {
+            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
+              task._tags = tags
+            });
+          }
+        }),
         catchError(this.handleError<Task>('save task'))
       );
   }
 
   deleteTask(id: number): Observable<Task> {
-    const url = `${this.tasksURL}/${id}`;
+    const url = `${this.tasksURL}${id}`;
     return this.http.delete<Task>(url, this.httpOptions)
       .pipe(
         tap(_ => this.log(`deleted task with ID ${id}`)),

@@ -54,7 +54,8 @@ export class TasksComponent implements OnInit {
 
     let task: Task = {
       title: title,
-      tags: []
+      tags: [],
+      _tags: []
     }
 
     if (tags === undefined) {
@@ -63,18 +64,33 @@ export class TasksComponent implements OnInit {
     }
 
     let parsed_tags: string[] = tags.split(/\s*(?:,|$)\s*/);
-    console.log(parsed_tags);
     let tags$: Observable<Tag[]>[] = [];
 
     // have to resolve tags to IDs
     parsed_tags.forEach((tag: string) => tags$.push(this.tagService.getTagBySlug(tag)))
     forkJoin(tags$).subscribe( (res_tags: Tag[][]) => {
       res_tags.forEach((tags: Tag[]) => {
-        task.tags?.push(tags[0].id);
-        console.log(tags);
+        if (tags.length) {
+          task.tags.push(tags[0].id);
+          task._tags.push(tags[0]);
+        }
       });
-      this.taskService.addTask(task as Task).subscribe((task: Task) => this.tasks.push(task));
+      this.taskService.addTask(task as Task).subscribe((task: Task) => this.tasks.unshift(task));
     });
+
+    this.task_input = "";
+  }
+
+  deleteTask(task: Task): void {
+    if (task.id != null) {
+      this.taskService.deleteTask(task.id).subscribe();
+    }
+
+    const taskIndex = this.tasks.findIndex(t => t.id === task.id)
+    if (taskIndex !== -1) {
+      this.tasks.splice(taskIndex, 1);
+    }
+
   }
 
   // https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color

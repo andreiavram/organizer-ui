@@ -12,7 +12,6 @@ export class ItemCacheService {
   constructor() { }
 
   updateItem(item: any): void {
-    console.log(`updateItem called with ${item}`);
     if (item.id in this.itemCache) {
       this.itemCache[item.id].data = item;
       this.itemCache[item.id].timestamp = new Date();

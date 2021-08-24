@@ -16,7 +16,7 @@ export interface Task {
   completed?: boolean;
   priority?: number;
   owner?: number; // todo: Update to User
-  _tags?: Tag[];
-  tags?: number[]; // for writing references
+  _tags: Tag[];
+  tags: number[]; // for writing references
   project?: number // todo: Update to Project
 }

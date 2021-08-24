@@ -23,6 +23,21 @@
       <div class = "col">
         <span *ngFor="let tag of task._tags" style="background-color: {{ tag.color }}; color: {{ getTagTextColor(tag.color) }}" class="badge m-1 tag">{{ tag.name }}</span>
       </div>
+      <div class = "col">
+        <div class = "btn-group btn-group-sm" role="toolbar" aria-label="task toolbar">
+          <button type="button" class="btn btn-outline-primary">
+            <svg class="bi me-2" width="16" height="16" role="img" aria-label="Trashcan">
+              <use xlink:href="bootstrap-icons/bootstrap-icons.svg#pencil"></use>
+            </svg>
+          </button>
+
+          <button type="button" class="btn btn-outline-danger" (click)="deleteTask(task)">
+            <svg class="bi me-2" width="16" height="16" role="img" aria-label="Trashcan">
+              <use xlink:href="bootstrap-icons/bootstrap-icons.svg#trash"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   </li>
 </ul>
