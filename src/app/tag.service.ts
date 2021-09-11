@@ -26,6 +26,17 @@ export class TagService {
       )
   };
 
+  searchTags(query: string): Observable<Tag[]> {
+    console.log("search tags of tag service");
+    const url = `${this.tagsURL}?name=${query}`;
+    return this.http.get<Tag[]>(url)
+      .pipe(
+        tap((tags: Tag[]) => { this.tagCachingService.updateItems(tags) }),
+        tap(_ => this.log("fetched searched tags")),
+        catchError(this.handleError<Tag[]>('searchTags', []))
+      )
+  };
+
   getTag(id: number): Observable<Tag> {
     let cachedTag: Tag = this.tagCachingService.getItem(id) as Tag;
 

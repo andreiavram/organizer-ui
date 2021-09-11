@@ -52,6 +52,13 @@ export class TaskService {
     const url = `${this.tasksURL}${id}`
     return this.http.get<Task>(url)
       .pipe(
+        tap((task: Task) => {
+          if (task.tags?.length) {
+            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
+              task._tags = tags
+            });
+          }
+        }),
         tap(_ => this.log(`fetched task ${id}`)),
         catchError(this.handleError<Task>('getTask'))
       );
@@ -82,7 +89,7 @@ export class TaskService {
   }
 
   updateTask(task: Task): Observable<Task> {
-    const url = `${this.tasksURL}/${task.id}`;
+    const url = `${this.tasksURL}${task.id}/`;
     return this.http.put<Task>(url, task, this.httpOptions)
       .pipe(
         tap((updatedTask: Task) => this.log(`updated task id=${updatedTask.id}`)),
