@@ -1,0 +1,21 @@
+<form id="loginForm" [formGroup]="form" (ngSubmit)="doLogin()">
+  <div class="mb-3">
+    <label for="emailInput" class="form-label">Email address</label>
+    <input formControlName="email" name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" required>
+    <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.serverError">
+      {{ form.get('email')?.errors?.serverError }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="passwordInput" class="form-label">Password</label>
+    <input formControlName="password" name="password" type="password" class="form-control" id="passwordInput" required>
+    <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.serverError">
+      {{ form.get('password')?.errors?.serverError }}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="processing">
+
+    <ng-container *ngIf="!processing; else isProcessing">Login</ng-container>
+    <ng-template #isProcessing>Checking ...</ng-template>
+  </button>
+</form>
