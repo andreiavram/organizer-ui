@@ -27,11 +27,7 @@ export class TaskService {
      return this.http.get<Task[]>(this.tasksURL)
       .pipe(
         tap((tasks: Task[]) => tasks.map((task: Task) => {
-          if (task.tags?.length) {
-            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
-              task._tags = tags
-            });
-          }
+          this.processTaskTags(task);
           return task;
         })),
         tap(_ => this.log(`fetched ${_.length} tasks`)),
@@ -45,20 +41,13 @@ export class TaskService {
     }
 
     return this.tagService.getTagsByID(task.tags);
-
   }
 
   getTask(id: number): Observable<Task> {
     const url = `${this.tasksURL}${id}`
     return this.http.get<Task>(url)
       .pipe(
-        tap((task: Task) => {
-          if (task.tags?.length) {
-            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
-              task._tags = tags
-            });
-          }
-        }),
+        tap((task: Task) => { this.processTaskTags(task)} ),
         tap(_ => this.log(`fetched task ${id}`)),
         catchError(this.handleError<Task>('getTask'))
       );
@@ -68,19 +57,13 @@ export class TaskService {
     return this.http.post<Task>(this.tasksURL, task, this.httpOptions)
       .pipe(
         tap((newTask: Task) => this.log(`added task id=${newTask.id}`)),
-        tap((task: Task) => {
-          if (task.tags.length) {
-            this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
-              task._tags = tags
-            });
-          }
-        }),
+        tap((task: Task) => { this.processTaskTags(task)}),
         catchError(this.handleError<Task>('save task'))
       );
   }
 
   deleteTask(id: number): Observable<Task> {
-    const url = `${this.tasksURL}${id}`;
+    const url = `${this.tasksURL}${id}/`;
     return this.http.delete<Task>(url, this.httpOptions)
       .pipe(
         tap(_ => this.log(`deleted task with ID ${id}`)),
@@ -88,10 +71,23 @@ export class TaskService {
       );
   }
 
+  processTaskTags(task: Task) {
+    if (task.tags.length) {
+      this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
+        task._tags = tags
+      });
+    }
+  }
+
   updateTask(task: Task): Observable<Task> {
     const url = `${this.tasksURL}${task.id}/`;
+    // make sure task.tags contains all task._tags
+    // they can get unsynced if we edit the Task and change tags
+    task.tags = task._tags.map(tag => tag.id)
+
     return this.http.put<Task>(url, task, this.httpOptions)
       .pipe(
+        tap((task: Task) => { this.processTaskTags(task) }),
         tap((updatedTask: Task) => this.log(`updated task id=${updatedTask.id}`)),
         catchError(this.handleError<Task>('update task'))
       );

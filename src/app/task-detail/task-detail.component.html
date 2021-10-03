@@ -14,14 +14,14 @@
               <use xlink:href="bootstrap-icons/bootstrap-icons.svg#pencil"></use>
             </svg>
           </button>
-          <button type="button" class ="btn btn-outline-primary">
+          <button type="button" class ="btn btn-outline-primary" (click)="toggleCompleted()">
             <svg class="bi" width="12" height="12" role="img" aria-label="Toggle completed">
               <use *ngIf="!task.completed" xlink:href="bootstrap-icons/bootstrap-icons.svg#square"></use>
               <use *ngIf="task.completed" xlink:href="bootstrap-icons/bootstrap-icons.svg#check-square"></use>
             </svg>
           </button>
 
-          <button type="button" class="btn btn-outline-danger">
+          <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             <svg class="bi" width="12" height="12" role="img" aria-label="Trashcan">
               <use xlink:href="bootstrap-icons/bootstrap-icons.svg#trash"></use>
             </svg>
@@ -29,19 +29,44 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <p>{{ task.description }}</p>
-    </div>
 
     <div>
       <span *ngFor="let tag of task._tags" style="background-color: {{ tag.color }}; color: {{ tag | tagColor }}"
             class="badge me-1 tag">{{ tag.name }}</span>
-      <tag-input identifyBy="id" displayBy="name" [(ngModel)]="task._tags" [onlyFromAutocomplete]="true">
-        <tag-input-dropdown [autocompleteObservable]="searchTags" [showDropdownIfEmpty]="true" displayBy="name" identifyBy="id" >
+      <tag-input identifyBy="id" displayBy="name" [(ngModel)]="task._tags" [onlyFromAutocomplete]="true" [disable]="!editMode">
+        <tag-input-dropdown [autocompleteObservable]="searchTags(tagService)" [showDropdownIfEmpty]="true" displayBy="name" identifyBy="id" >
         </tag-input-dropdown>
       </tag-input>
     </div>
-    <div>
+    <div class="row mt-2">
+      <h2>Description</h2>
+      <p *ngIf="!editMode">{{ task.description }}</p>
+      <textarea *ngIf="editMode" class="form-control" [(ngModel)]="task.description"></textarea>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title text-danger" id="deleteModalLabel">
+          Delete task?
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the task <strong>{{ task?.title }}</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="deleteTask()" data-bs-dismiss="modal">
+            <svg class="bi mt-0" width="12" height="12" role="img" aria-label="Trashcan">
+              <use xlink:href="bootstrap-icons/bootstrap-icons.svg#trash"></use>
+            </svg>
+          Delete</button>
+      </div>
     </div>
   </div>
 </div>

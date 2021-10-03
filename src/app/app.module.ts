@@ -13,6 +13,7 @@ import { TaskDetailComponent } from './task-detail/task-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { TagColorPipe } from './tag-color.pipe';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { TagColorPipe } from './tag-color.pipe';
     MessagesComponent,
     TaskDetailComponent,
     TagColorPipe,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

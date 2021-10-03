@@ -27,7 +27,6 @@ export class TagService {
   };
 
   searchTags(query: string): Observable<Tag[]> {
-    console.log("search tags of tag service");
     const url = `${this.tagsURL}?name=${query}`;
     return this.http.get<Tag[]>(url)
       .pipe(
@@ -75,6 +74,7 @@ export class TagService {
       return of(result as T);
     }
   }
+
   private log(message: string) {
     this.messageService.add(`TaskService: ${message}`);
   }
