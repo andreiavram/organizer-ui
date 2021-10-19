@@ -7,13 +7,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TasksComponent } from './tasks/tasks.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { MessagesComponent } from './messages/messages.component';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { TagColorPipe } from './tag-color.pipe';
 import { LoginComponent } from './login/login.component';
+import {httpInterceptorProviders} from './http-interceptors';
+import {TokenInterceptor} from './http-interceptors/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,10 @@ import { LoginComponent } from './login/login.component';
     TagInputModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    // httpInterceptorProviders
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

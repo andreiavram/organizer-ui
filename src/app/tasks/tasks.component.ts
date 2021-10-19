@@ -15,7 +15,7 @@ export class TasksComponent implements OnInit {
   tasks: Task[] = [];
   tags: Tag[] = []
   selectedTask?: Task;
-  task_input: string = "";
+  taskInput: string = "";
 
   constructor(
     private taskService: TaskService,
@@ -60,6 +60,7 @@ export class TasksComponent implements OnInit {
 
     if (tags === undefined) {
       this.taskService.addTask(task as Task).subscribe((task: Task) => this.tasks.push(task));
+      this.taskInput = "";
       return;
     }
 
@@ -78,7 +79,7 @@ export class TasksComponent implements OnInit {
       this.taskService.addTask(task as Task).subscribe((task: Task) => this.tasks.unshift(task));
     });
 
-    this.task_input = "";
+    this.taskInput = "";
   }
 
   deleteTask(task: Task): void {

@@ -1,14 +1,15 @@
 <form id="loginForm" [formGroup]="form" (ngSubmit)="doLogin()">
+  <div class = "alert alert-danger" *ngIf="form.errors?.serverError">{{ form.errors?.serverError }}</div>
   <div class="mb-3">
     <label for="emailInput" class="form-label">Email address</label>
-    <input formControlName="email" name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" required>
+    <input formControlName="email" [ngClass]="{'is-invalid': form.get('email')?.errors?.serverError}" name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" required>
     <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.serverError">
       {{ form.get('email')?.errors?.serverError }}
     </div>
   </div>
   <div class="mb-3">
     <label for="passwordInput" class="form-label">Password</label>
-    <input formControlName="password" name="password" type="password" class="form-control" id="passwordInput" required>
+    <input formControlName="password" [ngClass]="{'is-invalid': form.get('password')?.errors?.serverError}" name="password" type="password" class="form-control" id="passwordInput" required>
     <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.serverError">
       {{ form.get('password')?.errors?.serverError }}
     </div>

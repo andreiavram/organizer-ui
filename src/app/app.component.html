@@ -24,9 +24,11 @@
             <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
           </form>
 
-          <div class="text-end">
+          <div class="text-end" *ngIf="!userAuthenticated()">
             <button type="button" class="btn btn-outline-light me-2" routerLink="/login">Login</button>
-            <button type="button" class="btn btn-warning">Sign-up</button>
+          </div>
+          <div class="text-end" *ngIf="userAuthenticated()">
+            {{ currentUser()?.email }}
           </div>
         </div>
       </div>
