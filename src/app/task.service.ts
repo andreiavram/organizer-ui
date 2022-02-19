@@ -83,7 +83,10 @@ export class TaskService {
     const url = `${this.tasksURL}${task.id}/`;
     // make sure task.tags contains all task._tags
     // they can get unsynced if we edit the Task and change tags
-    task.tags = task._tags.map(tag => tag.id)
+    task.tags = [];
+    if (task._tags) {
+      task.tags = task._tags.map(tag => tag.id)
+    }
 
     return this.http.put<Task>(url, task, this.httpOptions)
       .pipe(

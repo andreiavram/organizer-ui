@@ -1,21 +1,25 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { TagInputModule } from 'ngx-chips';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TasksComponent } from './tasks/tasks.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {TagInputModule} from 'ngx-chips';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TasksComponent} from './tasks/tasks.component';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { MessagesComponent } from './messages/messages.component';
-import { TaskDetailComponent } from './task-detail/task-detail.component';
+import {MessagesComponent} from './messages/messages.component';
+import {TaskDetailComponent} from './task-detail/task-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
-import { TagColorPipe } from './tag-color.pipe';
-import { LoginComponent } from './login/login.component';
-import {httpInterceptorProviders} from './http-interceptors';
+import {AppRoutingModule} from './app-routing.module';
+import {TagColorPipe} from './tag-color.pipe';
+import {LoginComponent} from './login/login.component';
 import {TokenInterceptor} from './http-interceptors/token.interceptor';
+import {TagsComponent} from './tags/tags.component';
+import {TagDetailComponent} from './tag-detail/tag-detail.component';
+import {ColorPickerModule} from 'ngx-color-picker';
+import { ReverseLuminanceColorPipe } from './reverse-luminance-color.pipe';
+import { SlugifyPipe } from './slugify.pipe';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,10 @@ import {TokenInterceptor} from './http-interceptors/token.interceptor';
     TaskDetailComponent,
     TagColorPipe,
     LoginComponent,
+    TagsComponent,
+    TagDetailComponent,
+    ReverseLuminanceColorPipe,
+    SlugifyPipe,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +48,7 @@ import {TokenInterceptor} from './http-interceptors/token.interceptor';
     AppRoutingModule,
     TagInputModule,
     ReactiveFormsModule,
+    ColorPickerModule
   ],
   providers: [
     // httpInterceptorProviders

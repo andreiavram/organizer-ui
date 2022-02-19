@@ -24,14 +24,15 @@
       </div>
       <div class = "col-1 col-task-toolbar">
         <div class = "btn-group btn-group-sm" role="toolbar" aria-label="task toolbar">
-          <button type="button" class="btn btn-outline-primary" routerLink="/tasks/{{ task.id }}">
-            <svg class="bi" width="12" height="12" role="img" aria-label="Trashcan">
+          <button type="button" class="btn btn-secondary" routerLink="/tasks/{{ task.id }}">
+            <svg class="bi" width="12" height="12" role="img" aria-label="Pencil" fill="currentColor">
               <use xlink:href="bootstrap-icons/bootstrap-icons.svg#pencil"></use>
             </svg>
           </button>
-
-          <button type="button" class="btn btn-outline-danger" (click)="deleteTask(task)">
-            <svg class="bi" width="12" height="12" role="img" aria-label="Trashcan">
+        </div>
+        <div class = "btn-group btn-group-sm ms-1" role="toolbar" aria-label="task toolbar delete">
+          <button type="button" class="btn btn-danger" (click)="deleteTask(task)">
+            <svg class="bi" width="12" height="12" role="img" aria-label="Trashcan" fill="currentColor">
               <use xlink:href="bootstrap-icons/bootstrap-icons.svg#trash"></use>
             </svg>
           </button>

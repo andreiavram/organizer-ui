@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MessageService} from './message.service';
 import {forkJoin, ObjectUnsubscribedError, Observable, of, zip} from 'rxjs';
 import {Tag} from './tag';
 import {catchError, tap} from 'rxjs/operators';
 import {ItemCacheService} from './item-cache.service';
+import {Task} from './task';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,10 @@ import {ItemCacheService} from './item-cache.service';
 export class TagService {
   tagsURL: string = "http://127.0.0.1:8000/api/tag/";
   tagCache: Tag[] = [];
+
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  }
 
   constructor(private http: HttpClient,
               private messageService: MessageService,
@@ -77,5 +82,25 @@ export class TagService {
 
   private log(message: string) {
     this.messageService.add(`TaskService: ${message}`);
+  }
+
+  updateTag(tag: Tag): Observable<Tag> {
+    const url = `${this.tagsURL}${tag.id}/`;
+
+    return this.http.put<Tag>(url, tag, this.httpOptions)
+      .pipe(
+        tap((updatedTag: Tag) => this.log(`updated tag id=${updatedTag.id}`)),
+        catchError(this.handleError<Tag>('update tag'))
+      );
+  }
+
+  createTag(tag: Tag): Observable<Tag> {
+    const url = `${this.tagsURL}`;
+
+    return this.http.post<Tag>(url, tag, this.httpOptions)
+      .pipe(
+        tap((createdTag: Tag) => this.log(`created tag id=${createdTag.id}`)),
+        catchError(this.handleError<Tag>('create tag'))
+      )
   }
 }
