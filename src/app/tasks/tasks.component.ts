@@ -5,6 +5,8 @@ import {TagService} from '../tag.service';
 import {Tag} from '../tag';
 import {TaskDetailComponent} from '../task-detail/task-detail.component';
 import {forkJoin, Observable} from 'rxjs';
+import {TaskFilters} from '../task-filters';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
@@ -16,6 +18,8 @@ export class TasksComponent implements OnInit {
   tags: Tag[] = []
   selectedTask?: Task;
   taskInput: string = "";
+  filters: {[k: string]: boolean} = {};
+  activeTaskCount = 0;
 
   constructor(
     private taskService: TaskService,
@@ -24,12 +28,49 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTags();
+
+    this.filters = {
+      "today": false,
+      "completed": false,
+      "todo": true
+    }
     this.getTasks();
   }
 
+  toggleFilters(filter: string): void {
+    if (!(filter in this.filters)) return;
+    this.filters[filter] = !this.filters[filter];
+    this.getTasks();
+  }
+
+  processFilters(): TaskFilters {
+    let completed: boolean | null = null;
+    if (this.filters['completed'] && this.filters['todo']) {
+      completed = null
+    } else if (this.filters['todo']) {
+      completed = false;
+    } else if (this.filters['completed']) {
+      completed = true;
+    }
+
+    if (this.filters['today']) {
+      //  this should highlight tasks in the Today list, once that feature is available on the BE
+    }
+
+    let filters = new TaskFilters(completed);
+    return filters;
+  }
+
   getTasks(): void {
-    this.taskService.getTasks()
-      .subscribe(tasks => {this.tasks = tasks});
+    let filters = this.processFilters();
+    this.taskService.getTasks(filters)
+      .subscribe(tasks => {
+        this.tasks = tasks
+        this.activeTaskCount = 0
+        tasks.forEach((task: Task) => {
+          this.activeTaskCount += task.completed ? 0 : 1
+        })
+      });
   }
 
   getTags(): void {
@@ -96,6 +137,7 @@ export class TasksComponent implements OnInit {
 
   toggleTaskDone (task: Task) {
     if (task) {
+      this.activeTaskCount += task.completed ? 1 : -1
       task.completed = !task.completed;
       this.taskService.updateTask(task).subscribe((t: Task) => { task = t })
     }

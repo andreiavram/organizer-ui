@@ -6,6 +6,9 @@ import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {TagService} from './tag.service';
 import {Tag} from './tag';
+import {query} from '@angular/animations';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {TaskFilters} from './task-filters';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +26,10 @@ export class TaskService {
     private tagService: TagService) {
   }
 
-  getTasks(): Observable<Task[]> {
-     return this.http.get<Task[]>(this.tasksURL)
+  getTasks(filters: TaskFilters | null = null): Observable<Task[]> {
+    if (!filters) filters = new TaskFilters()
+    let url = filters.getFilteredURL(this.tasksURL);
+    return this.http.get<Task[]>(url)
       .pipe(
         tap((tasks: Task[]) => tasks.map((task: Task) => {
           this.processTaskTags(task);

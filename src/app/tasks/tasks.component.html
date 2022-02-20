@@ -1,4 +1,9 @@
-<h1> Tasks <small class="text-muted">get things done</small></h1>
+<h1> {{ activeTaskCount }} Tasks <small class="text-muted">get things done</small></h1>
+<div class = "btn-group mb-3" role="toolbar" aria-label="task toolbar">
+  <button type="button" class="btn" [ngClass]="{'btn-primary': filters['todo'], 'btn-outline-primary': !filters['todo']}" (click)="toggleFilters('todo')">Todo</button>
+  <button type="button" class="btn" [ngClass]="{'btn-primary': filters['completed'], 'btn-outline-primary': !filters['completed']}" (click)="toggleFilters('completed')">Completed</button>
+  <button type="button" class="btn" [ngClass]="{'btn-primary': filters['today'], 'btn-outline-primary': !filters['today']}" (click)="toggleFilters('today')">Today</button>
+</div>
 
 <div class = "row mb-3 m-0">
     <input id="task-title" class="form-control" [(ngModel)]="taskInput" (keyup.enter)="addTask(taskInput)" placeholder="Mai multe task-uri ...">
