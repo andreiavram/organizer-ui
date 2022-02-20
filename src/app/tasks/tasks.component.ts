@@ -4,9 +4,9 @@ import {Task} from '../task';
 import {TagService} from '../tag.service';
 import {Tag} from '../tag';
 import {TaskDetailComponent} from '../task-detail/task-detail.component';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {TaskFilters} from '../task-filters';
-import {tap} from 'rxjs/operators';
+import {map, mergeMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasks',
@@ -43,27 +43,41 @@ export class TasksComponent implements OnInit {
     this.getTasks();
   }
 
-  processFilters(): TaskFilters {
+  processFilters(useCompletedDate:boolean = false): TaskFilters {
     let completed: boolean | null = null;
-    if (this.filters['completed'] && this.filters['todo']) {
-      completed = null
-    } else if (this.filters['todo']) {
-      completed = false;
-    } else if (this.filters['completed']) {
-      completed = true;
+    if (this.filters['completed'] != this.filters['todo']) {
+      completed = this.filters['completed']
     }
 
-    if (this.filters['today']) {
-      //  this should highlight tasks in the Today list, once that feature is available on the BE
+    let forToday: boolean | null = this.filters['today'] ? true : null;
+
+    let completed_date: Date | null = null;
+    if (useCompletedDate) {
+      completed_date = new Date()
+      //  completed date tasks have forToday disabled
+      forToday = null;
     }
 
-    let filters = new TaskFilters(completed);
-    return filters;
+    return new TaskFilters(completed, null, completed_date, null, forToday);
+
   }
 
   getTasks(): void {
-    let filters = this.processFilters();
-    this.taskService.getTasks(filters)
+    let tasks$: Observable<Task[]>;
+    if (this.filters['today'] && this.filters['completed']) {
+      //  have to do 2 calls to the API
+      let filtersNoDate = this.processFilters(false);
+      let filtersDate = this.processFilters(true);
+      tasks$ = forkJoin([this.taskService.getTasks(filtersNoDate),
+        this.taskService.getTasks(filtersDate)]).pipe(
+          map((taskResponses: [Task[], Task[]]) => [...taskResponses[0], ...taskResponses[1]])
+      )
+    } else {
+      let filters = this.processFilters();
+      tasks$ = this.taskService.getTasks(filters);
+    }
+
+    tasks$
       .subscribe(tasks => {
         this.tasks = tasks
         this.activeTaskCount = 0
@@ -95,6 +109,7 @@ export class TasksComponent implements OnInit {
 
     let task: Task = {
       title: title,
+      for_today: this.filters["today"],
       tags: [],
       _tags: []
     }
@@ -135,11 +150,25 @@ export class TasksComponent implements OnInit {
 
   }
 
-  toggleTaskDone (task: Task) {
-    if (task) {
-      this.activeTaskCount += task.completed ? 1 : -1
-      task.completed = !task.completed;
-      this.taskService.updateTask(task).subscribe((t: Task) => { task = t })
+  toggleTaskDone (task: Task): void {
+    if (!task) return;
+    this.activeTaskCount += task.completed ? 1 : -1
+    task.completed = !task.completed;
+    if (task.completed && task.for_today) task.for_today = false;
+    this.taskService.updateTask(task).subscribe((t: Task) => { task = t })
+
+    if ((!this.filters['completed'] && this.filters['todo']) ||
+      (!this.filters['todo'] && this.filters['completed']))  {
+      this.tasks = this.tasks.filter((task: Task) => this.filters['todo'] ? !task.completed : task.completed)
+    }
+  }
+
+  toggleTaskToday(task: Task): void {
+    if (!task || task.completed) return;
+    task.for_today = !task.for_today;
+    this.taskService.updateTask(task).subscribe((t: Task) => { task = t })
+    if (this.filters["today"]) {
+      this.tasks = this.tasks.filter((task: Task) => task.for_today)
     }
   }
 

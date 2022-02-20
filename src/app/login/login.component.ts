@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormControl, FormGroup, NgForm} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
   processing: boolean = false;
 
   form = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl('')
+    email: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required])
   })
 
   constructor(

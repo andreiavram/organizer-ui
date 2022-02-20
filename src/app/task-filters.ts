@@ -1,5 +1,6 @@
 import {Tag} from './tag';
 import {query} from '@angular/animations';
+import {formatDate} from '@angular/common';
 
 export class TaskFilters {
   [k: string]: any;
@@ -8,20 +9,23 @@ export class TaskFilters {
   contains: string | null;
   completed_date: Date | null;
   tags: Tag[] | null;
+  for_today: boolean | null;
 
   constructor(completed: boolean | null = null,
               contains: string | null = null,
               completed_date: Date | null = null,
-              tags: Tag[] | null = null) {
+              tags: Tag[] | null = null,
+              forToday: boolean | null = null) {
     this.completed = completed;
     this.contains = contains;
     this.completed_date = completed_date;
     this.tags = tags;
+    this.for_today = forToday;
   }
 
   getQueryString(): string {
     let queryItems: string[] = [];
-    let filterList: string[] = ["completed", "contains", "completed_date"]
+    let filterList: string[] = ["completed", "contains", "for_today"]
 
     filterList.forEach((item => {
       if (this[item] !== null) {
@@ -33,6 +37,10 @@ export class TaskFilters {
       this.tags.forEach((tag: Tag) => {
         queryItems.push(`tags=${tag.slug}`);
       })
+    }
+
+    if (this.completed_date) {
+      queryItems.push(`completed_date=${formatDate(this.completed_date, "yyyy-MM-dd", 'en-US')}`)
     }
 
     return queryItems.join("&")

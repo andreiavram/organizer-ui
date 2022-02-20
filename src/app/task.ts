@@ -18,5 +18,6 @@ export interface Task {
   owner?: number; // todo: Update to User
   _tags: Tag[];
   tags: number[]; // for writing references
-  project?: number // todo: Update to Project
+  project?: number; // todo: Update to Project
+  for_today?: boolean;
 }

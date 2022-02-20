@@ -14,7 +14,7 @@
       {{ form.get('password')?.errors?.serverError }}
     </div>
   </div>
-  <button type="submit" class="btn btn-primary" [disabled]="processing">
+  <button type="submit" class="btn btn-primary" [disabled]="processing || !form.valid">
 
     <ng-container *ngIf="!processing; else isProcessing">Login</ng-container>
     <ng-template #isProcessing>Checking ...</ng-template>

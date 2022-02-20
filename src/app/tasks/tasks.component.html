@@ -19,7 +19,14 @@
               <use *ngIf="task.completed" xlink:href="bootstrap-icons/bootstrap-icons.svg#check-square"></use>
             </svg>
           </div>
+          <div href="" class="text-black" (click)="toggleTaskToday(task)">
+            <svg class="bi me-2" width="16" height="16" role="img" aria-label="Checkbox">
+              <use *ngIf="!task.for_today" xlink:href="bootstrap-icons/bootstrap-icons.svg#calendar2"></use>
+              <use *ngIf="task.for_today" xlink:href="bootstrap-icons/bootstrap-icons.svg#calendar2-check-fill"></use>
+            </svg>
+          </div>
       </div>
+
       <div class = "col-6">
         <a class="text-dark text-decoration-none" [ngClass]="{'text-decoration-line-through': task.completed}" routerLink="/tasks/{{ task.id }}">{{ task.title }}</a> <span class = "small text-muted m-2" *ngIf="task.completed">Completed on {{ task.completed_date | date}}</span>
         <p class = "small">{{ task.description }}</p>
