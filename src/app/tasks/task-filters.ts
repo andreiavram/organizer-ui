@@ -1,4 +1,4 @@
-import {Tag} from './tag';
+import {Tag} from '../tags/tag';
 import {query} from '@angular/animations';
 import {formatDate} from '@angular/common';
 

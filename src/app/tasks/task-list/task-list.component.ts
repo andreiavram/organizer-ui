@@ -1,25 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TaskService} from '../task.service';
 import {Task} from '../task';
-import {TagService} from '../tag.service';
-import {Tag} from '../tag';
+import {TagService} from '../../tags/tag.service';
+import {Tag} from '../../tags/tag';
 import {TaskDetailComponent} from '../task-detail/task-detail.component';
 import {forkJoin, Observable, of} from 'rxjs';
 import {TaskFilters} from '../task-filters';
 import {map, mergeMap, tap} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
+  selector: 'app-task-list',
+  templateUrl: './task-list.component.html',
+  styleUrls: ['./task-list.component.css']
 })
-export class TasksComponent implements OnInit {
+export class TaskListComponent implements OnInit {
   tasks: Task[] = [];
   tags: Tag[] = []
   selectedTask?: Task;
   taskInput: string = "";
   filters: {[k: string]: boolean} = {};
   activeTaskCount = 0;
+
+  @Input() filters_tags: Tag[] | null = null;
+  @Input() for_tag: Tag | null = null;
 
   constructor(
     private taskService: TaskService,
@@ -32,7 +35,7 @@ export class TasksComponent implements OnInit {
     this.filters = {
       "today": false,
       "completed": false,
-      "todo": true
+      "todo": true,
     }
     this.getTasks();
   }
@@ -51,14 +54,16 @@ export class TasksComponent implements OnInit {
 
     let forToday: boolean | null = this.filters['today'] ? true : null;
 
+    let tags: Tag[] | null = this.filters_tags || null;
+
     let completed_date: Date | null = null;
     if (useCompletedDate) {
       completed_date = new Date()
-      //  completed date tasks have forToday disabled
+      //  completed date task-list have forToday disabled
       forToday = null;
     }
 
-    return new TaskFilters(completed, null, completed_date, null, forToday);
+    return new TaskFilters(completed, null, completed_date, tags, forToday);
 
   }
 
@@ -123,7 +128,7 @@ export class TasksComponent implements OnInit {
     let parsed_tags: string[] = tags.split(/\s*(?:,|$)\s*/);
     let tags$: Observable<Tag[]>[] = [];
 
-    // have to resolve tags to IDs
+    // have to resolve tags-list to IDs
     parsed_tags.forEach((tag: string) => tags$.push(this.tagService.getTagBySlug(tag)))
     forkJoin(tags$).subscribe( (res_tags: Tag[][]) => {
       res_tags.forEach((tags: Tag[]) => {

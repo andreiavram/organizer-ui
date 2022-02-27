@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MessageService} from './message.service';
 import {LoginData} from './loginData';
 import {catchError, tap} from 'rxjs/operators';
-import {Task} from './task';
+import {Task} from './tasks/task';
 import {User} from './user';
 import {UserService} from './user.service';
 

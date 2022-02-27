@@ -1,4 +1,4 @@
-import {Tag} from './tag';
+import {Tag} from '../tags/tag';
 
 export interface Task {
   id?: number;

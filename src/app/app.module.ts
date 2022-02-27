@@ -4,35 +4,37 @@ import {BrowserModule} from '@angular/platform-browser';
 import {TagInputModule} from 'ngx-chips';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TasksComponent} from './tasks/tasks.component';
+import {TaskListComponent} from './tasks/task-list/task-list.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MessagesComponent} from './messages/messages.component';
-import {TaskDetailComponent} from './task-detail/task-detail.component';
+import {TaskDetailComponent} from './tasks/task-detail/task-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
-import {TagColorPipe} from './tag-color.pipe';
+import {TagColorPipe} from './tags/tag-color.pipe';
 import {LoginComponent} from './login/login.component';
 import {TokenInterceptor} from './http-interceptors/token.interceptor';
-import {TagsComponent} from './tags/tags.component';
-import {TagDetailComponent} from './tag-detail/tag-detail.component';
+import {TagListComponent} from './tags/tags-list/tag-list.component';
+import {TagDetailComponent} from './tags/tag-detail/tag-detail.component';
 import {ColorPickerModule} from 'ngx-color-picker';
 import { ReverseLuminanceColorPipe } from './reverse-luminance-color.pipe';
 import { SlugifyPipe } from './slugify.pipe';
+import { ProjectListComponent } from './projects/project-list/project-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TasksComponent,
+    TaskListComponent,
     MessagesComponent,
     TaskDetailComponent,
     TagColorPipe,
     LoginComponent,
-    TagsComponent,
+    TagListComponent,
     TagDetailComponent,
     ReverseLuminanceColorPipe,
     SlugifyPipe,
+    ProjectListComponent,
   ],
   imports: [
     BrowserModule,

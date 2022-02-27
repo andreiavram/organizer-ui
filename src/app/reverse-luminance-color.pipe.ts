@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {Tag} from './tag';
+import {Tag} from './tags/tag';
 
 @Pipe({
   name: 'reverseLuminanceColor'

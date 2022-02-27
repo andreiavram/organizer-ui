@@ -3,9 +3,9 @@ import {Task} from '../task';
 import {TaskService} from '../task.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {TagService} from '../tag.service';
+import {TagService} from '../../tags/tag.service';
 import {Observable, of} from 'rxjs';
-import {Tag} from '../tag';
+import {Tag} from '../../tags/tag';
 import {Modal} from 'bootstrap';
 
 @Component({

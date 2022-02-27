@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {MessageService} from './message.service';
+import {MessageService} from '../message.service';
 import {forkJoin, ObjectUnsubscribedError, Observable, of, zip} from 'rxjs';
 import {Tag} from './tag';
 import {catchError, tap} from 'rxjs/operators';
-import {ItemCacheService} from './item-cache.service';
-import {Task} from './task';
+import {ItemCacheService} from '../item-cache.service';
+import {Task} from '../tasks/task';
+import {ServiceBase} from '../service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TagService {
+export class TagService  extends ServiceBase {
   tagsURL: string = "http://127.0.0.1:8000/api/tag/";
   tagCache: Tag[] = [];
 
@@ -19,14 +20,16 @@ export class TagService {
   }
 
   constructor(private http: HttpClient,
-              private messageService: MessageService,
-              private tagCachingService: ItemCacheService) { }
+              protected messageService: MessageService,
+              private tagCachingService: ItemCacheService) {
+    super(messageService);
+  }
 
   getTags(): Observable<Tag[]> {
     return this.http.get<Tag[]>(this.tagsURL)
       .pipe(
         tap((tags: Tag[]) => { this.tagCachingService.updateItems(tags) }),
-        tap(_ => this.log("fetched tags")),
+        tap(_ => this.log("fetched tags-list")),
         catchError(this.handleError<Tag[]>('getTags', []))
       )
   };
@@ -36,7 +39,7 @@ export class TagService {
     return this.http.get<Tag[]>(url)
       .pipe(
         tap((tags: Tag[]) => { this.tagCachingService.updateItems(tags) }),
-        tap(_ => this.log("fetched searched tags")),
+        tap(_ => this.log("fetched searched tags-list")),
         catchError(this.handleError<Tag[]>('searchTags', []))
       )
   };
@@ -70,18 +73,6 @@ export class TagService {
     let obs: Observable<Tag>[] = [];
     ids.forEach((id: number) => obs.push(this.getTag(id)));
     return forkJoin(obs);
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      this.log(`${operation} failed ${error.message}`);
-      return of(result as T);
-    }
-  }
-
-  private log(message: string) {
-    this.messageService.add(`TaskService: ${message}`);
   }
 
   updateTag(tag: Tag): Observable<Tag> {

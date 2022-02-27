@@ -4,11 +4,11 @@ import {TagService} from '../tag.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
-  selector: 'app-tags',
-  templateUrl: './tags.component.html',
-  styleUrls: ['./tags.component.css']
+  selector: 'app-tags-list',
+  templateUrl: './tag-list.component.html',
+  styleUrls: ['./tag-list.component.css']
 })
-export class TagsComponent implements OnInit {
+export class TagListComponent implements OnInit {
   tags: Tag[] = [];
   selectedTag: Tag | null = null;
 

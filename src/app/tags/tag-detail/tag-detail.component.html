@@ -44,8 +44,11 @@
         <textarea placeholder="Short Description" *ngIf="editMode" class="form-control" [(ngModel)]="tag.description"></textarea>
       </div>
     </div>
+
+      <app-task-list [filters_tags] = "[tag, ]"></app-task-list>
   </div>
 </div>
+
 
 
 <!--<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">-->

@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
 import { Task } from './task';
-import { MessageService } from './message.service';
+import { MessageService } from '../message.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {TagService} from './tag.service';
-import {Tag} from './tag';
+import {TagService} from '../tags/tag.service';
+import {Tag} from '../tags/tag';
 import {query} from '@angular/animations';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {TaskFilters} from './task-filters';
+import {ServiceBase} from '../service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TaskService {
+export class TaskService extends ServiceBase {
   private tasksURL = 'http://127.0.0.1:8000/api/task/'
 
   httpOptions = {
@@ -22,8 +23,9 @@ export class TaskService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService,
+    protected messageService: MessageService,
     private tagService: TagService) {
+    super(messageService);
   }
 
   getTasks(filters: TaskFilters | null = null): Observable<Task[]> {
@@ -86,8 +88,8 @@ export class TaskService {
 
   updateTask(task: Task): Observable<Task> {
     const url = `${this.tasksURL}${task.id}/`;
-    // make sure task.tags contains all task._tags
-    // they can get unsynced if we edit the Task and change tags
+    // make sure task.tags-list contains all task._tags
+    // they can get unsynced if we edit the Task and change tags-list
     task.tags = [];
     if (task._tags) {
       task.tags = task._tags.map(tag => tag.id)
@@ -99,16 +101,5 @@ export class TaskService {
         tap((updatedTask: Task) => this.log(`updated task id=${updatedTask.id}`)),
         catchError(this.handleError<Task>('update task'))
       );
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      this.log(`${operation} failed ${error.message}`);
-      return of(result as T);
-    }
-  }
-  private log(message: string) {
-    this.messageService.add(`TaskService: ${message}`);
   }
 }
