@@ -31,10 +31,10 @@
     </div>
 
     <div>
-      <span *ngFor="let tag of task._tags" style="background-color: {{ tag.color }}; color: {{ tag | tagColor }}"
+      <span *ngFor="let tag of task._tags" [style.background-color]="tag.color"  [style.color]="tag.color | reverseLuminanceColor"
             class="badge me-1 tag">{{ tag.name }}</span>
-      <tag-input identifyBy="id" displayBy="name" [(ngModel)]="task._tags" [onlyFromAutocomplete]="true" [disable]="!editMode">
-        <tag-input-dropdown [autocompleteObservable]="searchTags(tagService)" [showDropdownIfEmpty]="true" displayBy="name" identifyBy="id" >
+      <tag-input identifyBy="id" displayBy="name" [(ngModel)]="task._tags" theme='bootstrap' [onlyFromAutocomplete]="true" [disable]="!editMode">
+        <tag-input-dropdown [autocompleteObservable]="searchTags(tagService)" [showDropdownIfEmpty]="true"  displayBy="name" identifyBy="id" >
         </tag-input-dropdown>
       </tag-input>
     </div>

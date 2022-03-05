@@ -21,6 +21,8 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import { ReverseLuminanceColorPipe } from './reverse-luminance-color.pipe';
 import { SlugifyPipe } from './slugify.pipe';
 import { ProjectListComponent } from './projects/project-list/project-list.component';
+import { ProjectDetailComponent } from './projects/project-details/project-detail.component';
+import { ProjectFormComponent } from './projects/project-form/project-form.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { ProjectListComponent } from './projects/project-list/project-list.compo
     ReverseLuminanceColorPipe,
     SlugifyPipe,
     ProjectListComponent,
+    ProjectDetailComponent,
+    ProjectFormComponent,
   ],
   imports: [
     BrowserModule,

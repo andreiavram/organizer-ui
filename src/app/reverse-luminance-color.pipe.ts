@@ -11,7 +11,7 @@ export class ReverseLuminanceColorPipe implements PipeTransform {
   }
 
   // https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
-  getReverseLuminanceColor (bgColor: string, lightColor = '#FFFFFF', darkColor = '#000000') {
+  getReverseLuminanceColor (bgColor: string, lightColor = '#FFFFFF', darkColor = '#000000'): string {
     const getLuminance = function (hexColor: string) {
       if(hexColor === "#FFFFFF") return 1.;
       if(hexColor === "#000000") return 0.;

@@ -1,0 +1,56 @@
+<h1 *ngIf="project">{{ project.title }}</h1>
+<h1 *ngIf="!project">Proiect nou</h1>
+
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <input type="hidden" formControlName="id" id="id">
+  <div class="row">
+    <div class="col-9">
+      <label for="title" class="form-label">Titlu</label>
+      <input class="form-control" id="title" type="text" formControlName="title">
+    </div>
+    <div class="col-3">
+      <label for="slug" class="form-label">Slug</label>
+      <input class="form-control" id="slug" type="text" formControlName="slug">
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12">
+      <label for="description">Descriere (link documente): </label>
+      <textarea class="form-control" id="description" formControlName="description"></textarea>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-6">
+      <label for="startDate" class="form-label">Data început</label>
+      <input class="form-control" id="startDate" type="text" formControlName="start_date">
+    </div>
+    <div class="col-6">
+      <label for="endDate" class="form-label">Data sfârșit</label>
+      <input class="form-control" id="endDate" type="text" formControlName="end_date">
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-12" *ngIf="project">
+        <span *ngFor="let tag of project._tags" [style.background-color]="tag.color"
+              [style.color]="tag.color | reverseLuminanceColor"
+              class="badge me-1 tag">{{ tag.name }}</span>
+    </div>
+    <div class="col-12">
+      <tag-input identifyBy="id" displayBy="name" formControlName="_tags" theme='bootstrap'
+                 [onlyFromAutocomplete]="true">
+        <tag-input-dropdown [autocompleteObservable]="searchTags()" [showDropdownIfEmpty]="true" displayBy="name"
+                            identifyBy="id">
+        </tag-input-dropdown>
+      </tag-input>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-12">
+      <button class="btn-primary btn" type="submit">Send</button>
+      <button class="float-end btn btn-outline-danger" type="button">Delete</button>
+    </div>
+  </div>
+
+</form>

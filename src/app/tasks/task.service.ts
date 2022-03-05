@@ -28,13 +28,30 @@ export class TaskService extends ServiceBase {
     super(messageService);
   }
 
+  processTagsFromServer(task: Task) {
+    if (task.tags.length) {
+      this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
+        task._tags = tags
+      });
+    }
+  }
+
+
+  processTagsToServer(task: Task): void {
+    task.tags = [];
+    if (task._tags) {
+      task.tags = task._tags.map(tag => tag.id)
+    }
+  }
+
+
   getTasks(filters: TaskFilters | null = null): Observable<Task[]> {
     if (!filters) filters = new TaskFilters()
     let url = filters.getFilteredURL(this.tasksURL);
     return this.http.get<Task[]>(url)
       .pipe(
         tap((tasks: Task[]) => tasks.map((task: Task) => {
-          this.processTaskTags(task);
+          this.processTagsFromServer(task);
           return task;
         })),
         tap(_ => this.log(`fetched ${_.length} tasks`)),
@@ -54,17 +71,18 @@ export class TaskService extends ServiceBase {
     const url = `${this.tasksURL}${id}`
     return this.http.get<Task>(url)
       .pipe(
-        tap((task: Task) => { this.processTaskTags(task)} ),
+        tap((task: Task) => { this.processTagsFromServer(task)} ),
         tap(_ => this.log(`fetched task ${id}`)),
         catchError(this.handleError<Task>('getTask'))
       );
   }
 
   addTask(task: Task): Observable<Task> {
+    this.processTagsToServer(task);
     return this.http.post<Task>(this.tasksURL, task, this.httpOptions)
       .pipe(
         tap((newTask: Task) => this.log(`added task id=${newTask.id}`)),
-        tap((task: Task) => { this.processTaskTags(task)}),
+        tap((task: Task) => { this.processTagsFromServer(task)}),
         catchError(this.handleError<Task>('save task'))
       );
   }
@@ -78,26 +96,13 @@ export class TaskService extends ServiceBase {
       );
   }
 
-  processTaskTags(task: Task) {
-    if (task.tags.length) {
-      this.tagService.getTagsByID(task.tags).subscribe((tags: Tag[]) => {
-        task._tags = tags
-      });
-    }
-  }
-
   updateTask(task: Task): Observable<Task> {
     const url = `${this.tasksURL}${task.id}/`;
-    // make sure task.tags-list contains all task._tags
-    // they can get unsynced if we edit the Task and change tags-list
-    task.tags = [];
-    if (task._tags) {
-      task.tags = task._tags.map(tag => tag.id)
-    }
+    this.processTagsToServer(task);
 
     return this.http.put<Task>(url, task, this.httpOptions)
       .pipe(
-        tap((task: Task) => { this.processTaskTags(task) }),
+        tap((task: Task) => { this.processTagsFromServer(task) }),
         tap((updatedTask: Task) => this.log(`updated task id=${updatedTask.id}`)),
         catchError(this.handleError<Task>('update task'))
       );
