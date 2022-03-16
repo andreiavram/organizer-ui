@@ -18,11 +18,14 @@ import {TokenInterceptor} from './http-interceptors/token.interceptor';
 import {TagListComponent} from './tags/tags-list/tag-list.component';
 import {TagDetailComponent} from './tags/tag-detail/tag-detail.component';
 import {ColorPickerModule} from 'ngx-color-picker';
-import { ReverseLuminanceColorPipe } from './reverse-luminance-color.pipe';
-import { SlugifyPipe } from './slugify.pipe';
-import { ProjectListComponent } from './projects/project-list/project-list.component';
-import { ProjectDetailComponent } from './projects/project-details/project-detail.component';
-import { ProjectFormComponent } from './projects/project-form/project-form.component';
+import {ReverseLuminanceColorPipe} from './reverse-luminance-color.pipe';
+import {SlugifyPipe} from './slugify.pipe';
+import {ProjectListComponent} from './projects/project-list/project-list.component';
+import {ProjectDetailComponent} from './projects/project-details/project-detail.component';
+import {ProjectFormComponent} from './projects/project-form/project-form.component';
+import {NgbDateAdapter, NgbDateParserFormatter, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NormalDateAdapter} from './normal-date-adapter';
+import {NormalDateParserFormatter} from './normal-date-parser-formatter';
 
 @NgModule({
   declarations: [
@@ -54,11 +57,14 @@ import { ProjectFormComponent } from './projects/project-form/project-form.compo
     AppRoutingModule,
     TagInputModule,
     ReactiveFormsModule,
-    ColorPickerModule
+    ColorPickerModule,
+    NgbModule,
   ],
   providers: [
     // httpInterceptorProviders
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    // { provide: NgbDateAdapter, useClass: NormalDateAdapter },
+    // { provide: NgbDateParserFormatter, useClass: NormalDateParserFormatter }
   ],
   bootstrap: [AppComponent]
 })

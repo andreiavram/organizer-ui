@@ -6,31 +6,73 @@
   <div class="row">
     <div class="col-9">
       <label for="title" class="form-label">Titlu</label>
-      <input class="form-control" id="title" type="text" formControlName="title">
+      <input class="form-control" id="title" type="text"
+             [ngClass]="{'is-invalid': projectForm.get('title')?.invalid && showErrors}"
+             formControlName="title" (keyup)="updateSlug()">
+      <div class = "invalid-feedback" *ngIf="projectForm.get('title')?.invalid && showErrors">
+        <div *ngIf="projectForm.get('title')?.errors?.serverError">
+          {{ projectForm.get('title')?.errors?.serverError}}
+        </div>
+        <div *ngIf="projectForm.get('title')?.errors?.required">
+          This field is required.
+        </div>
+      </div>
     </div>
     <div class="col-3">
       <label for="slug" class="form-label">Slug</label>
-      <input class="form-control" id="slug" type="text" formControlName="slug">
+      <input class="form-control" id="slug" type="text"
+             [ngClass]="{'is-invalid': projectForm.get('slug')?.invalid && showErrors}"
+             formControlName="slug" readonly>
+      <div class = "invalid-feedback" *ngIf="projectForm.get('slug')?.invalid && showErrors">
+        <div *ngIf="projectForm.get('slug')?.errors?.serverError">
+          {{ projectForm.get('slug')?.errors?.serverError}}
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="row mb-2">
     <div class="col-12">
       <label for="description">Descriere (link documente): </label>
-      <textarea class="form-control" id="description" formControlName="description"></textarea>
+      <textarea class="form-control" id="description"
+                [ngClass]="{'is-invalid': projectForm.get('description')?.invalid && showErrors}"
+                formControlName="description"></textarea>
+      <div class = "invalid-feedback" *ngIf="projectForm.get('description')?.invalid && showErrors">
+        <div *ngIf="projectForm.get('description')?.errors?.serverError">
+          {{ projectForm.get('description')?.errors?.serverError}}
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="row mb-2">
     <div class="col-6">
       <label for="startDate" class="form-label">Data început</label>
-      <input class="form-control" id="startDate" type="text" formControlName="start_date">
+      <input class="form-control" ngbDatepicker id="startDate" type="text"
+             #sDate="ngbDatepicker" (click)="sDate.toggle()"
+             [ngClass]="{'is-invalid': projectForm.get('start_date')?.invalid && showErrors}"
+             formControlName="start_date">
+      <div class="invalid-feedback" *ngIf="projectForm.get('start_date')?.invalid && showErrors">
+        <div *ngIf="projectForm.get('start_date')?.errors?.serverError">
+          {{ projectForm.get('start_date')?.errors?.serverError }}
+        </div>
+      </div>
     </div>
+
     <div class="col-6">
       <label for="endDate" class="form-label">Data sfârșit</label>
-      <input class="form-control" id="endDate" type="text" formControlName="end_date">
+      <input class="form-control" ngbDatepicker id="endDate" type="text"
+             (click)="eDate.toggle()" #eDate="ngbDatepicker"
+             [ngClass]="{'is-invalid': projectForm.get('end_date')?.invalid && showErrors}"
+             formControlName="end_date">
+      <div class="invalid-feedback" *ngIf="projectForm.get('end_date')?.invalid && showErrors">
+        <div *ngIf="projectForm.get('end_date')?.errors?.serverError">
+          {{ projectForm.get('end_date')?.errors?.serverError }}
+        </div>
+      </div>
     </div>
   </div>
+
   <div class="row mb-2">
     <div class="col-12" *ngIf="project">
         <span *ngFor="let tag of project._tags" [style.background-color]="tag.color"

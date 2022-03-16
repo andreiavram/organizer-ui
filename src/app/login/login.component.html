@@ -2,7 +2,13 @@
   <div class = "alert alert-danger" *ngIf="form.errors?.serverError">{{ form.errors?.serverError }}</div>
   <div class="mb-3">
     <label for="emailInput" class="form-label">Email address</label>
-    <input formControlName="email" [ngClass]="{'is-invalid': form.get('email')?.errors?.serverError}" name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" required>
+    <input formControlName="email" [ngClass]="{'is-invalid': form.get('email')?.invalid && processing}" name="email" type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" required>
+    <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.required">
+      This field is required.
+    </div>
+    <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.email">
+      This field only accepts valid email addresses.
+    </div>
     <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.serverError">
       {{ form.get('email')?.errors?.serverError }}
     </div>

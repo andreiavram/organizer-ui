@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
-import {Observable, of, throwError} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MessageService} from './message.service';
 import {LoginData} from './loginData';
 import {catchError, tap} from 'rxjs/operators';
-import {Task} from './tasks/task';
 import {User} from './user';
-import {UserService} from './user.service';
+import {ServiceBase} from './service-base';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends ServiceBase {
   isLoggedIn = false;
   redirectUrl: string | null = null;
 
@@ -26,8 +25,10 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService,
-  ) { }
+    protected messageService: MessageService,
+  ) {
+    super(messageService);
+  }
 
   login(loginData: any): Observable<LoginData> {
     return this.http.post<LoginData>(this.loginURL, loginData, this.httpOptions)
@@ -58,16 +59,5 @@ export class AuthService {
   public isAuthenticated(): boolean {
     return !!this.getUserToken();
   }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {console.error(error);
-      this.log(`${operation} failed ${error.message}`);
-      return throwError(error);
-    }
-  }
-
-  private log(message: string) {
-    this.messageService.add(`AuthService: ${message}`);
-  }
-
 }
+

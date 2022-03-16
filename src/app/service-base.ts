@@ -1,4 +1,4 @@
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {MessageService} from './message.service';
 
 export class ServiceBase {
@@ -9,9 +9,8 @@ export class ServiceBase {
 
   protected handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(error);
       this.log(`${operation} failed ${error.message}`);
-      return of(result as T);
+      return throwError(error);
     }
   }
 

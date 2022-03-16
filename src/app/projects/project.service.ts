@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MessageService} from '../message.service';
 import {TagService} from '../tags/tag.service';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {Project} from './project';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, filter, tap} from 'rxjs/operators';
 import {ServiceBase} from '../service-base';
 import {Tag} from '../tags/tag';
 import {Task} from '../tasks/task';
@@ -13,7 +13,9 @@ import {Task} from '../tasks/task';
   providedIn: 'root'
 })
 export class ProjectService extends ServiceBase {
-  private projectsURL = 'http://127.0.0.1:8000/api/project/'
+  private projectsURL = 'http://127.0.0.1:8000/api/project/';
+  project: BehaviorSubject<Project | null> = new BehaviorSubject<Project | null>(null);
+  projectList: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
 
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -35,11 +37,10 @@ export class ProjectService extends ServiceBase {
 
   processTagsFromServer(project: Project): void {
     if (project.tags.length) {
-      let tagSolver = this.tagService.getTagsByID(project.tags)
-      tagSolver.subscribe((tags: Tag[]) => {
+      this.tagService.getTagsByID(project.tags).subscribe((tags: Tag[]) => {
         project._tags = tags;
+        this.project.next(project);
       })
-      // prject.tagSolver$ = tagSolver;
     } else {
       project._tags = []
     }
@@ -61,22 +62,49 @@ export class ProjectService extends ServiceBase {
     return `${this.projectsURL}${project_id}/`;
   }
 
-  getProject(project_id: number | string): Observable<Project> {
-    const url = this.getDetailURL(project_id);
-    return this.http.get<Project>(url)
+  clearProject(): void {
+    this.project.next(null);
+  }
+
+  getProject(projectId: number | string): Observable<Project | null> {
+    this._getProject(projectId);
+    return this.project.asObservable().pipe(
+      filter(item => item !== null)
+    )
+  }
+
+  _getProject(projectId: number | string): void {
+    const url = this.getDetailURL(projectId);
+    this.http.get<Project>(url)
       .pipe(
         tap((project: Project) => {
           this.processTagsFromServer(project);
         }),
         tap(_ => this.log(`fetched project ${_.id}`)),
-        catchError(this.handleError<Project>('getProject'))
-    )
+        catchError(error => {
+          this.clearProject()
+          return throwError(error);
+        })
+    ).pipe(
+      catchError(this.handleError<Project>('getProject'))
+    ).subscribe()
+  }
+
+  cleanFormValues(project: Project) {
+    let nullableKeys: (keyof Project)[] = ["start_date", "end_date", "description"];
+    nullableKeys.forEach(key => {
+      if (project[key] === "") {
+        //  project as any here to be able to programmatically set values to null
+        (project as any)[key] = null;
+      }
+    });
   }
 
   createProject(project: Project): Observable<Project> {
     const url = this.projectsURL;
 
     this.processTagsToServer(project);
+    this.cleanFormValues(project);
     return this.http.post<Project>(url, project, this.httpOptions)
       .pipe(
         tap((newProject: Project) => {
