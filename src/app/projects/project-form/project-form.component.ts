@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProjectService} from '../project.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Project} from '../project';
 import {TagService} from '../../tags/tag.service';
 import {Observable, throwError} from 'rxjs';
@@ -31,7 +31,7 @@ export class ProjectFormComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public tagService: TagService,
     private route: ActivatedRoute,
     private router: Router,
@@ -72,7 +72,7 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
-  applyErrorsOnForm(form: FormGroup, errors: {error: any}): void {
+  applyErrorsOnForm(form: UntypedFormGroup, errors: {error: any}): void {
     Object.keys(errors.error).forEach(field => {
       const formControl = form.get(field);
       if (formControl) {
