@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {MessageService} from './message.service';
 import {LoginData} from './loginData';
 import {catchError, tap} from 'rxjs/operators';

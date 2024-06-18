@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TaskListComponent} from './tasks/task-list/task-list.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {MessagesComponent} from './messages/messages.component';
 import {TaskDetailComponent} from './tasks/task-detail/task-detail.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -27,45 +27,37 @@ import {NgbDateAdapter, NgbDateParserFormatter, NgbModule} from '@ng-bootstrap/n
 import {NormalDateAdapter} from './normal-date-adapter';
 import {NormalDateParserFormatter} from './normal-date-parser-formatter';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    TaskListComponent,
-    MessagesComponent,
-    TaskDetailComponent,
-    TagColorPipe,
-    LoginComponent,
-    TagListComponent,
-    TagDetailComponent,
-    ReverseLuminanceColorPipe,
-    SlugifyPipe,
-    ProjectListComponent,
-    ProjectDetailComponent,
-    ProjectFormComponent,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-    HttpClientModule,
-    FormsModule,
-    AppRoutingModule,
-    TagInputModule,
-    ReactiveFormsModule,
-    ColorPickerModule,
-    NgbModule,
-  ],
-  providers: [
-    // httpInterceptorProviders
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    // { provide: NgbDateAdapter, useClass: NormalDateAdapter },
-    // { provide: NgbDateParserFormatter, useClass: NormalDateParserFormatter }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        TaskListComponent,
+        MessagesComponent,
+        TaskDetailComponent,
+        TagColorPipe,
+        LoginComponent,
+        TagListComponent,
+        TagDetailComponent,
+        ReverseLuminanceColorPipe,
+        SlugifyPipe,
+        ProjectListComponent,
+        ProjectDetailComponent,
+        ProjectFormComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the app is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        FormsModule,
+        AppRoutingModule,
+        TagInputModule,
+        ReactiveFormsModule,
+        ColorPickerModule,
+        NgbModule], providers: [
+        // httpInterceptorProviders
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
